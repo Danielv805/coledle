@@ -43,11 +43,23 @@ function handleKeyPress(key) {
     if (gameOver) return;
 
     if (key === 'Enter') {
+
+        // DREW easter egg 💀
+        if (currentGuess === 'DREW') {
+            document.body.innerHTML = '';
+            document.body.style.background = 'red';
+            return;
+        }
+
         submitGuess();
+
     } else if (key === 'Backspace') {
         deleteLetter();
-    } else if (/^[A-Z]$/.test(key) && currentTile < WORD_LENGTH) {
-        addLetter(key);
+
+    } else if (/^[A-Z]$/.test(key)) {
+        if (currentTile < WORD_LENGTH) {
+            addLetter(key);
+        }
     }
 }
 
