@@ -44,7 +44,7 @@ body::after {
 /* Front face animation: hold, flip 180deg occasionally, hold again, then continue.
    Duration chosen so the flip happens "every once in a while" and repeats forever. */
 body::before {
-    animation: bgFlipFront 20s ease-in-out infinite;
+    animation: bgFlipFront 2s ease-in-out infinite;
 }
 
 /* Back face starts mirrored (rotated 180deg + flipped horizontally) so when the container flips the back shows
@@ -52,7 +52,7 @@ body::before {
    by 180deg so a face is always visible. */
 body::after {
     transform: rotateY(180deg) scaleX(-1);
-    animation: bgFlipBack 20s ease-in-out infinite;
+    animation: bgFlipBack 2s ease-in-out infinite;
 }
 
 @keyframes bgFlipFront {
