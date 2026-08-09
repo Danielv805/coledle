@@ -6,13 +6,32 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: url('cole.jpeg') center/cover no-repeat;
-    background-attachment: fixed;
+    background: url('cole.jpeg');
+    background-size: 200% 200%;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    animation: backgroundShift 8s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0% {
+        background-position: 0% 0%;
+    }
+    25% {
+        background-position: 100% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    75% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
 }
 
 .container {
