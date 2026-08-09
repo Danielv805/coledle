@@ -1,5 +1,5 @@
 // Game state
-const WORD = 'HORSE';
+const WORD = 'COLE.';
 const MAX_ATTEMPTS = 6;
 let currentRow = 0;
 let currentTile = 0;
@@ -84,7 +84,7 @@ function submitGuess() {
     if (currentGuess === WORD) {
         gameOver = true;
         setTimeout(() => {
-            showMessage('🎉 Congratulations! You found HORSE! 🐴');
+            showMessage('🎉 Congratulations! You found COLE.! 🐴');
             celebrateWin();
         }, 1500);
         return;
