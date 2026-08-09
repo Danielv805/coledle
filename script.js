@@ -303,5 +303,4 @@ function resetGame() {
 
 // Start the game
 init();
-```
 
