@@ -94,7 +94,7 @@ function submitGuess() {
         gameOver = true;
 
         setTimeout(() => {
-            showMessage('🎉 You found COLE! 🗿');
+            showMessage('fucking genius');
             celebrateWin();
         }, 1500);
 
@@ -111,7 +111,7 @@ function submitGuess() {
         gameOver = true;
 
         setTimeout(() => {
-            showMessage(`Game Over! The word was ${WORD} 🗿`);
+            showMessage(`what the fuck the word was ${WORD} you retard`);
         }, 1500);
     }
 }
