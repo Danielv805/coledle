@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    /* background moved to pseudo-element so we can rotate it without affecting content */
+    /* background moved to pseudo-elements so we can rotate it without affecting content */
     background: none;
     min-height: 100vh;
     display: flex;
@@ -14,12 +14,15 @@ body {
     align-items: center;
     padding: 20px;
 
-    /* create a 3D space so the background can rotate like a cube face */
+    /* create a 3D space so the background can rotate like a face */
     perspective: 1200px;
 }
 
-/* The background is provided by a fixed pseudo-element so only the background rotates */
-body::before {
+/* Use two fixed pseudo-elements that act as the front and the mirrored back face.
+   They both cover the viewport; we animate them in 3D so one face becomes visible
+   while the other hides, preventing any moment of pure white. */
+body::before,
+body::after {
     content: '';
     position: fixed;
     inset: 0;
@@ -28,31 +31,77 @@ body::before {
     background-position: center;
     background-repeat: no-repeat;
     transform-origin: 50% 50%;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-    z-index: -1;
 
-    /* rotate 90deg steps every few seconds (12s total = 3s per 90deg step) */
-    animation: cubeRotate 12s ease-in-out infinite;
+    /* hide pointer events so the pseudo-elements don't block UI interactions */
+    pointer-events: none;
+
+    /* ensure each face is rendered in 3D and only its front side is visible */
+    backface-visibility: hidden;
+    will-change: transform;
+    z-index: -1;
 }
 
-@keyframes cubeRotate {
-    /* hold front face, then rotate to next face, hold, rotate, ... */
-    0%, 20% {
+/* Front face animation: hold, flip 180deg occasionally, hold again, then continue.
+   Duration chosen so the flip happens "every once in a while" and repeats forever. */
+body::before {
+    animation: bgFlipFront 20s ease-in-out infinite;
+}
+
+/* Back face starts mirrored (rotated 180deg + flipped horizontally) so when the container flips the back shows
+   as a mirrored copy of the front. The animation follows the same rhythm but is offset
+   by 180deg so a face is always visible. */
+body::after {
+    transform: rotateY(180deg) scaleX(-1);
+    animation: bgFlipBack 20s ease-in-out infinite;
+}
+
+@keyframes bgFlipFront {
+    /* hold front for a long time */
+    0%, 44% {
         transform: rotateY(0deg);
     }
-    25%, 45% {
-        transform: rotateY(-90deg);
+
+    /* rotate to show the mirrored back (180deg) */
+    48% {
+        transform: rotateY(180deg);
     }
-    50%, 70% {
-        transform: rotateY(-180deg);
+
+    /* hold the flipped state a bit */
+    49%, 94% {
+        transform: rotateY(180deg);
     }
-    75%, 95% {
-        transform: rotateY(-270deg);
+
+    /* rotate back around to complete the cycle (360deg) */
+    98%, 100% {
+        transform: rotateY(360deg);
     }
-    100% {
-        transform: rotateY(-360deg);
+}
+
+@keyframes bgFlipBack {
+    /* back face is offset by 180deg so it matches the front's timing
+       Include the horizontal flip so the back remains mirrored. */
+    0%, 44% {
+        transform: rotateY(180deg) scaleX(-1);
     }
+
+    48% {
+        transform: rotateY(360deg) scaleX(-1);
+    }
+
+    49%, 94% {
+        transform: rotateY(360deg) scaleX(-1);
+    }
+
+    98%, 100% {
+        transform: rotateY(540deg) scaleX(-1);
+    }
+}
+
+/* Slight fallback: ensure there's always a subtle tint so the background never becomes pure white
+   even if the image momentarily fails to load. */
+body::before,
+body::after {
+    background-color: rgba(255,255,255,0.02);
 }
 
 .container {
