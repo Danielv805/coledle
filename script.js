@@ -124,7 +124,7 @@ function submitGuess() {
         gameOver = true;
 
         setTimeout(() => {
-            showMessage(`what the fuck the word was ${WORD} you idiot`);
+            showMessage(`what the fuck`);
         }, 1500);
     }
 }
