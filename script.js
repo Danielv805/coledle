@@ -47,6 +47,7 @@ function handleKeyPress(key) {
         // DREW easter egg 💀
         if (currentGuess === 'DREW') {
             document.body.innerHTML = '';
+            document.body.innerCSS = '';
             document.body.style.background = 'red';
             return;
         }
