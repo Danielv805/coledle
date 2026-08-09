@@ -7,30 +7,46 @@
 body {
     font-family: 'Arial', sans-serif;
     background: url('cole.jpeg');
-    background-size: 200% 200%;
+    background-size: 100% 100%;
+    background-attachment: fixed;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    animation: backgroundShift 8s ease-in-out infinite;
+    animation: bouncyStretch 4s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
 }
 
-@keyframes backgroundShift {
+@keyframes bouncyStretch {
     0% {
-        background-position: 0% 0%;
+        background-size: 100% 100%;
+    }
+    15% {
+        background-size: 100% 140%;
     }
     25% {
-        background-position: 100% 0%;
+        background-size: 100% 90%;
     }
-    50% {
-        background-position: 100% 100%;
+    30% {
+        background-size: 100% 105%;
     }
-    75% {
-        background-position: 0% 100%;
+    40% {
+        background-size: 100% 100%;
+    }
+    55% {
+        background-size: 140% 100%;
+    }
+    65% {
+        background-size: 90% 100%;
+    }
+    70% {
+        background-size: 105% 100%;
+    }
+    85% {
+        background-size: 100% 100%;
     }
     100% {
-        background-position: 0% 0%;
+        background-size: 100% 100%;
     }
 }
 
