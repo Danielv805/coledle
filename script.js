@@ -1,6 +1,8 @@
 // Game state
-const WORD = 'COLE.';
+const WORD = 'COLE';
 const MAX_ATTEMPTS = 6;
+const WORD_LENGTH = 4;
+
 let currentRow = 0;
 let currentTile = 0;
 let currentGuess = '';
@@ -16,7 +18,9 @@ const newGameBtn = document.getElementById('newGameBtn');
 function init() {
     // Add event listeners to keyboard
     keys.forEach(key => {
-        key.addEventListener('click', () => handleKeyPress(key.dataset.key));
+        key.addEventListener('click', () => {
+            handleKeyPress(key.dataset.key);
+        });
     });
 
     // Add physical keyboard listener
@@ -42,17 +46,19 @@ function handleKeyPress(key) {
         submitGuess();
     } else if (key === 'Backspace') {
         deleteLetter();
-    } else if (currentTile < 5) {
+    } else if (/^[A-Z]$/.test(key) && currentTile < WORD_LENGTH) {
         addLetter(key);
     }
 }
 
 // Add letter to current guess
 function addLetter(letter) {
-    if (currentTile < 5) {
-        const tileIndex = currentRow * 5 + currentTile;
+    if (currentTile < WORD_LENGTH) {
+        const tileIndex = currentRow * WORD_LENGTH + currentTile;
+
         tiles[tileIndex].textContent = letter;
         tiles[tileIndex].classList.add('filled');
+
         currentGuess += letter;
         currentTile++;
     }
@@ -62,16 +68,19 @@ function addLetter(letter) {
 function deleteLetter() {
     if (currentTile > 0) {
         currentTile--;
-        const tileIndex = currentRow * 5 + currentTile;
+
+        const tileIndex = currentRow * WORD_LENGTH + currentTile;
+
         tiles[tileIndex].textContent = '';
         tiles[tileIndex].classList.remove('filled');
+
         currentGuess = currentGuess.slice(0, -1);
     }
 }
 
 // Submit the current guess
 function submitGuess() {
-    if (currentTile !== 5) {
+    if (currentTile !== WORD_LENGTH) {
         showMessage('Not enough letters!');
         shakeTiles();
         return;
@@ -79,14 +88,16 @@ function submitGuess() {
 
     // Check the guess
     checkGuess();
-    
+
     // Check if game is won
     if (currentGuess === WORD) {
         gameOver = true;
+
         setTimeout(() => {
-            showMessage('🎉 Congratulations! You found COLE.! 🐴');
+            showMessage('🎉 You found COLE! 🗿');
             celebrateWin();
         }, 1500);
+
         return;
     }
 
@@ -98,8 +109,9 @@ function submitGuess() {
     // Check if game is lost
     if (currentRow === MAX_ATTEMPTS) {
         gameOver = true;
+
         setTimeout(() => {
-            showMessage(`Game Over! The word was ${WORD} 🐴`);
+            showMessage(`Game Over! The word was ${WORD} 🗿`);
         }, 1500);
     }
 }
@@ -109,15 +121,16 @@ function checkGuess() {
     const guessArray = currentGuess.split('');
     const wordArray = WORD.split('');
     const letterCount = {};
-    
+
     // Count letters in the target word
     wordArray.forEach(letter => {
         letterCount[letter] = (letterCount[letter] || 0) + 1;
     });
 
     // First pass: mark correct letters (green)
-    const tileStates = Array(5).fill(null);
-    for (let i = 0; i < 5; i++) {
+    const tileStates = Array(WORD_LENGTH).fill(null);
+
+    for (let i = 0; i < WORD_LENGTH; i++) {
         if (guessArray[i] === wordArray[i]) {
             tileStates[i] = 'correct';
             letterCount[guessArray[i]]--;
@@ -125,7 +138,7 @@ function checkGuess() {
     }
 
     // Second pass: mark present letters (yellow)
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < WORD_LENGTH; i++) {
         if (tileStates[i] === null) {
             if (letterCount[guessArray[i]] && letterCount[guessArray[i]] > 0) {
                 tileStates[i] = 'present';
@@ -137,8 +150,9 @@ function checkGuess() {
     }
 
     // Apply states to tiles with animation delay
-    for (let i = 0; i < 5; i++) {
-        const tileIndex = currentRow * 5 + i;
+    for (let i = 0; i < WORD_LENGTH; i++) {
+        const tileIndex = currentRow * WORD_LENGTH + i;
+
         setTimeout(() => {
             tiles[tileIndex].classList.add(tileStates[i]);
             updateKeyboard(guessArray[i], tileStates[i]);
@@ -148,17 +162,29 @@ function checkGuess() {
 
 // Update keyboard colors
 function updateKeyboard(letter, state) {
-    const keyElement = Array.from(keys).find(key => key.dataset.key === letter);
+    const keyElement = Array.from(keys).find(
+        key => key.dataset.key === letter
+    );
+
     if (!keyElement) return;
 
-    // Only update if the new state is "better" than the current state
-    const currentState = keyElement.classList.contains('correct') ? 'correct' :
-                        keyElement.classList.contains('present') ? 'present' :
-                        keyElement.classList.contains('absent') ? 'absent' : null;
+    // Only update if the new state is "better"
+    const currentState =
+        keyElement.classList.contains('correct') ? 'correct' :
+        keyElement.classList.contains('present') ? 'present' :
+        keyElement.classList.contains('absent') ? 'absent' :
+        null;
 
-    const statePriority = { correct: 3, present: 2, absent: 1 };
-    
-    if (!currentState || statePriority[state] > statePriority[currentState]) {
+    const statePriority = {
+        correct: 3,
+        present: 2,
+        absent: 1
+    };
+
+    if (
+        !currentState ||
+        statePriority[state] > statePriority[currentState]
+    ) {
         keyElement.classList.remove('correct', 'present', 'absent');
         keyElement.classList.add(state);
     }
@@ -168,6 +194,7 @@ function updateKeyboard(letter, state) {
 function showMessage(msg) {
     messageEl.textContent = msg;
     messageEl.classList.add('show');
+
     setTimeout(() => {
         messageEl.classList.remove('show');
         messageEl.textContent = '';
@@ -176,9 +203,14 @@ function showMessage(msg) {
 
 // Shake tiles animation
 function shakeTiles() {
-    const rowTiles = Array.from(tiles).slice(currentRow * 5, currentRow * 5 + 5);
+    const rowTiles = Array.from(tiles).slice(
+        currentRow * WORD_LENGTH,
+        currentRow * WORD_LENGTH + WORD_LENGTH
+    );
+
     rowTiles.forEach(tile => {
         tile.style.animation = 'shake 0.5s';
+
         setTimeout(() => {
             tile.style.animation = '';
         }, 500);
@@ -187,21 +219,32 @@ function shakeTiles() {
 
 // Add shake animation to CSS dynamically
 const style = document.createElement('style');
+
 style.textContent = `
     @keyframes shake {
         0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-        20%, 40%, 60%, 80% { transform: translateX(5px); }
+        10%, 30%, 50%, 70%, 90% {
+            transform: translateX(-5px);
+        }
+        20%, 40%, 60%, 80% {
+            transform: translateX(5px);
+        }
     }
 `;
+
 document.head.appendChild(style);
 
 // Celebrate win with animation
 function celebrateWin() {
-    const rowTiles = Array.from(tiles).slice(currentRow * 5, currentRow * 5 + 5);
+    const rowTiles = Array.from(tiles).slice(
+        currentRow * WORD_LENGTH,
+        currentRow * WORD_LENGTH + WORD_LENGTH
+    );
+
     rowTiles.forEach((tile, index) => {
         setTimeout(() => {
             tile.style.animation = 'bounce 0.5s';
+
             setTimeout(() => {
                 tile.style.animation = '';
             }, 500);
@@ -211,12 +254,19 @@ function celebrateWin() {
 
 // Add bounce animation
 const bounceStyle = document.createElement('style');
+
 bounceStyle.textContent = `
     @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-20px); }
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
     }
 `;
+
 document.head.appendChild(bounceStyle);
 
 // Reset game
@@ -229,12 +279,21 @@ function resetGame() {
     // Clear all tiles
     tiles.forEach(tile => {
         tile.textContent = '';
-        tile.classList.remove('filled', 'correct', 'present', 'absent');
+        tile.classList.remove(
+            'filled',
+            'correct',
+            'present',
+            'absent'
+        );
     });
 
     // Clear keyboard colors
     keys.forEach(key => {
-        key.classList.remove('correct', 'present', 'absent');
+        key.classList.remove(
+            'correct',
+            'present',
+            'absent'
+        );
     });
 
     // Clear message
@@ -244,3 +303,5 @@ function resetGame() {
 
 // Start the game
 init();
+```
+
