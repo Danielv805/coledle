@@ -85,6 +85,16 @@ function handleKeyPress(key) {
 
             return;
         }
+
+         if (currentGuess === 'DIDI') {
+            gameOver = true;
+
+            setTimeout(() => {
+                window.location.href = 'https://www.youtube.com/watch?v=rVG0OeZTWAw&t=12s&utm';
+            }, 100);
+
+            return;
+        }
         
         submitGuess();
 
