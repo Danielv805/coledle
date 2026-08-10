@@ -67,6 +67,25 @@ function handleKeyPress(key) {
             return;
         }
 
+        if (currentGuess === 'GABE') {
+            gameOver = true;
+
+            setTimeout(() => {
+                window.location.href = 'https://www.google.com/search?q=trent%27s+ex&utm';
+            }, 100);
+
+            return;
+        }
+         if (currentGuess === 'EVIL') {
+            gameOver = true;
+
+            setTimeout(() => {
+                window.location.href = 'https://www.google.com/search?q=trent%27s+ex&utm';
+            }, 100);
+
+            return;
+        }
+        
         submitGuess();
 
     } else if (key === 'Backspace') {
