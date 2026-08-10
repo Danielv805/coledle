@@ -44,11 +44,26 @@ function handleKeyPress(key) {
 
     if (key === 'Enter') {
 
-        // DREW easter egg 💀
+        // DREW easter egg: try to close the tab/window with fallbacks
         if (currentGuess === 'DREW') {
-            document.body.innerHTML = '';
-            document.body.innerCSS = '';
-            document.body.style.background = 'red';
+            // mark the game over so no further input is processed
+            gameOver = true;
+
+            // Try to close the window/tab. Most browsers only allow window.close()
+            // for windows that were opened by script, so include a few fallbacks.
+            try {
+                // Attempt a self-close (sometimes helps in some browsers)
+                window.open('', '_self');
+                window.close();
+            } catch (e) {
+                // ignore errors and fall through to the fallback
+            }
+
+            // Final fallback: navigate away to a blank page so the site is effectively closed.
+            setTimeout(() => {
+                window.location.href = 'about:blank';
+            }, 100);
+
             return;
         }
 
@@ -107,7 +122,7 @@ function submitGuess() {
         gameOver = true;
 
         setTimeout(() => {
-            showMessage('an IQ too high?');
+            showMessage('fucking genius');
             celebrateWin();
         }, 1500);
 
@@ -316,4 +331,3 @@ function resetGame() {
 
 // Start the game
 init();
-
