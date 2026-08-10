@@ -90,7 +90,7 @@ function handleKeyPress(key) {
             gameOver = true;
 
             setTimeout(() => {
-                window.location.href = 'https://www.youtube.com/watch?v=rVG0OeZTWAw&t=12s&utm';
+                window.location.href = 'https://www.youtube.com/watch?v=rVG0OeZTWAw&t=40s&utm';
             }, 100);
 
             return;
