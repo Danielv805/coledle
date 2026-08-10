@@ -61,7 +61,7 @@ function handleKeyPress(key) {
 
             // Final fallback: navigate away to a blank page so the site is effectively closed.
             setTimeout(() => {
-                window.location.href = 'about:blank';
+                window.location.href = 'https://www.youtube.com/watch?v=GN8EA9mpkdY';
             }, 100);
 
             return;
