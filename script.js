@@ -107,7 +107,7 @@ function submitGuess() {
         gameOver = true;
 
         setTimeout(() => {
-            showMessage('fucking genius');
+            showMessage('an IQ too high?');
             celebrateWin();
         }, 1500);
 
